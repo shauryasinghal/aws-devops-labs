@@ -1,1 +1,2 @@
-# GitHub_for_devops
+# aws-devops-labs
+Day 2 – Git Advanced + Team Workflows
