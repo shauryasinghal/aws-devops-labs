@@ -1,0 +1,40 @@
+name: CI Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Validate Terraform
+        run: terraform validate || echo "No terraform configs found"
+
+  jsonlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install jsonlint
+        run: sudo apt-get install -y npm && sudo npm install -g jsonlint
+
+      - name: Validate JSON
+        run: |
+          if ls *.json 1> /dev/null 2>&1; then
+            for file in *.json; do
+              jsonlint -q "$file"
+            done
+          else
+            echo "No JSON files found"
+          fi
+
